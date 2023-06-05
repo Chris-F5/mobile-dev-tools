@@ -1,4 +1,3 @@
-
 # Download the SDK command line tools into SDK_PREFIX.
 # Use sdkmanager to download build tools and a platform.
 SDK_PREFIX=/opt/android-sdk
@@ -21,5 +20,9 @@ ADB=/usr/bin/adb
 KEYTOOL=/usr/bin/keytool
 JARSIGNER=/usr/bin/jarsigner
 
-KEYALIAS=mykey
-KEYSTORE=mykeystore.keystore
+PROD_KEYALIAS=production
+PROD_KEYSTORE=production.keystore
+
+DEBUG_KEYALIAS=debug
+DEBUG_KEYSTORE=debug.keystore
+DEBUG_STOREPASS=debug_pass
