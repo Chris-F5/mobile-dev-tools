@@ -6,7 +6,7 @@ SDK_BUILD_TOOLS_PREFIX=${SDK_PREFIX}/build-tools/34.0.0-rc2
 SDK_PLATFORM_PREFIX=${SDK_PREFIX}/platforms/android-29
 
 SDK_BASE_PACKAGE=${SDK_PLATFORM_PREFIX}/android.jar
-AAPT=${SDK_BUILD_TOOLS_PREFIX}/aapt
+AAPT2=${SDK_BUILD_TOOLS_PREFIX}/aapt2
 D8=${SDK_BUILD_TOOLS_PREFIX}/d8
 
 # Java
@@ -16,13 +16,31 @@ JAVAC=/usr/bin/javac
 # Android Debug Bridge
 ADB=/usr/bin/adb
 
-# Digital signature
+# Keystore tools
 KEYTOOL=/usr/bin/keytool
 JARSIGNER=/usr/bin/jarsigner
 
+# Production keystore
 PROD_KEYALIAS=production
 PROD_KEYSTORE=production.keystore
 
+# Debug keystore
 DEBUG_KEYALIAS=debug
 DEBUG_KEYSTORE=debug.keystore
 DEBUG_STOREPASS=debug_pass
+
+# Project
+AUTHOR=chris256
+APP_NAME=myapp
+
+ANDROID_MANIFEST=AndroidManifest.xml
+SRC=src
+RES=res
+BUILD_DIR=build
+APK_RES=${BUILD_DIR}/apk_res
+TMP_APK=${BUILD_DIR}/build.apk
+CLASS_DIR=${BUILD_DIR}/class
+GEN_SRC=${BUILD_DIR}/gen_src
+DEBUG_APK=${BUILD_DIR}/debug.apk
+
+JAVA_MAIN=MainActivity

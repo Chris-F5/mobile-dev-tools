@@ -1,16 +1,21 @@
 include config.mk
 
-debug.apk: AndroidManifest.xml res classes.dex ${DEBUG_KEYSTORE}
-	${AAPT} package -f -M AndroidManifest.xml -S res -I ${SDK_BASE_PACKAGE} -F $@
-	${AAPT} add $@ classes.dex || rm -f $@
+${BUILD_DIR}/debug.apk: AndroidManifest.xml res ${DEBUG_KEYSTORE} ${src} ${APK_RES}
+	mkdir -p ${BUILD_DIR}
+	${AAPT2} link -I ${SDK_BASE_PACKAGE} -o ${TMP_APK} \
+		--manifest ${ANDROID_MANIFEST} --java ${GEN_SRC} \
+		${APK_RES}/*
+	${JAVAC} -sourcepath ${SRC} -classpath ${GEN_SRC}:${SDK_BASE_PACKAGE} \
+		-d ${CLASS_DIR} ${SRC}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.java
+	${D8} --output ${BUILD_DIR} ${CLASS_DIR}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.class
+	zip -j -u ${TMP_APK} ${BUILD_DIR}/classes.dex
 	${JARSIGNER} -verbose -keystore ${DEBUG_KEYSTORE} \
-		-storepass ${DEBUG_STOREPASS} $@ ${DEBUG_KEYALIAS} || rm -f $@
+		-storepass ${DEBUG_STOREPASS} ${TMP_APK} ${DEBUG_KEYALIAS}
+	mv --force ${TMP_APK} $@
 
-classes.dex: src/MainActivity.class
-	${D8} --output . src/MainActivity.class
-
-src/MainActivity.class: src/MainActivity.java
-	${JAVAC} -cp src:${SDK_BASE_PACKAGE} src/MainActivity.java
+${APK_RES}: ${RES}
+	mkdir -p ${APK_RES}
+	aapt2 compile --dir ${RES} -o ${APK_RES}
 
 ${DEBUG_KEYSTORE}:
 	${KEYTOOL} -genkeypair \
@@ -28,8 +33,8 @@ ${PROD_KEYSTORE}:
 
 .PHONY: install clean
 
-install: debug.apk
+install: ${DEBUG_APK}
 	${ADB} install $<
 
 clean:
-	rm -f debug.apk src/MainActivity.class classes.dex
+	rm -fr ${BUILD_DIR}

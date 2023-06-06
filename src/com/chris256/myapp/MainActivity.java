@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.chris256.myapp;
 
 import android.app.Activity;
 import android.os.Bundle;
