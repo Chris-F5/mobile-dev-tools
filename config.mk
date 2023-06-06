@@ -34,13 +34,13 @@ AUTHOR=chris256
 APP_NAME=myapp
 
 ANDROID_MANIFEST=AndroidManifest.xml
-SRC=src
-RES=res
+SRC_DIR=src
+RES_DIR=res
 BUILD_DIR=build
-APK_RES=${BUILD_DIR}/apk_res
+APK_RES_DIR=${BUILD_DIR}/apk_res
 TMP_APK=${BUILD_DIR}/build.apk
 CLASS_DIR=${BUILD_DIR}/class
-GEN_SRC=${BUILD_DIR}/gen_src
+GEN_SRC_DIR=${BUILD_DIR}/gen_src
 DEBUG_APK=${BUILD_DIR}/debug.apk
 
 JAVA_MAIN=MainActivity

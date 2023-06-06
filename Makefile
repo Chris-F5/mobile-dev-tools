@@ -1,21 +1,26 @@
 include config.mk
 
-${BUILD_DIR}/debug.apk: AndroidManifest.xml res ${DEBUG_KEYSTORE} ${SRC} ${APK_RES}
+SRC:=$(shell find ${SRC_DIR} -type f -name "*.java")
+RES:=$(shell find ${RES_DIR} -type f)
+
+${BUILD_DIR}/debug.apk: AndroidManifest.xml res ${SRC} ${DEBUG_KEYSTORE} ${APK_RES_DIR}
+	echo ${SRC}
+	echo ${RES}
 	mkdir -p ${BUILD_DIR}
 	${AAPT2} link -I ${SDK_BASE_PACKAGE} -o ${TMP_APK} \
-		--manifest ${ANDROID_MANIFEST} --java ${GEN_SRC} \
-		${APK_RES}/*
-	${JAVAC} -classpath ${SRC}:${GEN_SRC}:${SDK_BASE_PACKAGE} \
-		-d ${CLASS_DIR} ${SRC}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.java
+		--manifest ${ANDROID_MANIFEST} --java ${GEN_SRC_DIR} \
+		${APK_RES_DIR}/layout_activity_main.xml.flat
+	${JAVAC} -classpath ${SRC_DIR}:${GEN_SRC_DIR}:${SDK_BASE_PACKAGE} \
+		-d ${CLASS_DIR} ${SRC_DIR}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.java
 	${D8} --output ${BUILD_DIR} ${CLASS_DIR}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.class
 	zip -j -u ${TMP_APK} ${BUILD_DIR}/classes.dex
 	${JARSIGNER} -verbose -keystore ${DEBUG_KEYSTORE} \
 		-storepass ${DEBUG_STOREPASS} ${TMP_APK} ${DEBUG_KEYALIAS}
 	mv --force ${TMP_APK} $@
 
-${APK_RES}: ${RES}
-	mkdir -p ${APK_RES}
-	aapt2 compile --dir ${RES} -o ${APK_RES}
+${APK_RES_DIR}: ${RES}
+	mkdir -p ${APK_RES_DIR}
+	${AAPT2} compile --dir ${RES_DIR} -o ${APK_RES_DIR}
 
 ${DEBUG_KEYSTORE}:
 	${KEYTOOL} -genkeypair \
