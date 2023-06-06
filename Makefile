@@ -1,11 +1,11 @@
 include config.mk
 
-${BUILD_DIR}/debug.apk: AndroidManifest.xml res ${DEBUG_KEYSTORE} ${src} ${APK_RES}
+${BUILD_DIR}/debug.apk: AndroidManifest.xml res ${DEBUG_KEYSTORE} ${SRC} ${APK_RES}
 	mkdir -p ${BUILD_DIR}
 	${AAPT2} link -I ${SDK_BASE_PACKAGE} -o ${TMP_APK} \
 		--manifest ${ANDROID_MANIFEST} --java ${GEN_SRC} \
 		${APK_RES}/*
-	${JAVAC} -sourcepath ${SRC} -classpath ${GEN_SRC}:${SDK_BASE_PACKAGE} \
+	${JAVAC} -classpath ${SRC}:${GEN_SRC}:${SDK_BASE_PACKAGE} \
 		-d ${CLASS_DIR} ${SRC}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.java
 	${D8} --output ${BUILD_DIR} ${CLASS_DIR}/com/${AUTHOR}/${APP_NAME}/${JAVA_MAIN}.class
 	zip -j -u ${TMP_APK} ${BUILD_DIR}/classes.dex
