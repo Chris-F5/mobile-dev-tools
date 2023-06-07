@@ -1,6 +1,7 @@
 package com.chris256.myapp;
 
 import com.chris256.myapp.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
